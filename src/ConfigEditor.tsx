@@ -45,6 +45,28 @@ export class ConfigEditor extends PureComponent<Props, State> {
     });
   };
 
+  // Secure field (only sent to the backend)
+  onClientIdChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { onOptionsChange, options } = this.props;
+    onOptionsChange({
+      ...options,
+      secureJsonData: {
+        clientId: event.target.value,
+      },
+    });
+  };
+
+  // Secure field (only sent to the backend)
+  onClientSecretChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { onOptionsChange, options } = this.props;
+    onOptionsChange({
+      ...options,
+      secureJsonData: {
+        clientSecret: event.target.value,
+      },
+    });
+  };
+
   render() {
     const { options } = this.props;
     const { jsonData, secureJsonFields } = options;
@@ -63,17 +85,47 @@ export class ConfigEditor extends PureComponent<Props, State> {
           />
         </div>
 
+        {/*<div className="gf-form-inline">*/}
+        {/*  <div className="gf-form">*/}
+        {/*    <SecretFormField*/}
+        {/*      isConfigured={(secureJsonFields && secureJsonFields.apiKey) as boolean}*/}
+        {/*      value={secureJsonData.apiKey || ''}*/}
+        {/*      label="API Key"*/}
+        {/*      placeholder="secure json field (backend only)"*/}
+        {/*      labelWidth={6}*/}
+        {/*      inputWidth={20}*/}
+        {/*      onReset={this.onResetAPIKey}*/}
+        {/*      onChange={this.onAPIKeyChange}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+
         <div className="gf-form-inline">
           <div className="gf-form">
             <SecretFormField
-              isConfigured={(secureJsonFields && secureJsonFields.apiKey) as boolean}
-              value={secureJsonData.apiKey || ''}
-              label="API Key"
+              isConfigured={(secureJsonFields && secureJsonFields.clientId) as boolean}
+              value={secureJsonData.clientId || ''}
+              label="Client ID"
               placeholder="secure json field (backend only)"
               labelWidth={6}
               inputWidth={20}
               onReset={this.onResetAPIKey}
-              onChange={this.onAPIKeyChange}
+              onChange={this.onClientIdChange}
+            />
+          </div>
+        </div>
+
+        <div className="gf-form-inline">
+          <div className="gf-form">
+            <SecretFormField
+              isConfigured={(secureJsonFields && secureJsonFields.clientSecret) as boolean}
+              value={secureJsonData.clientSecret || ''}
+              label="Client Secret"
+              placeholder="secure json field (backend only)"
+              labelWidth={6}
+              inputWidth={20}
+              onReset={this.onResetAPIKey}
+              onChange={this.onClientSecretChange}
             />
           </div>
         </div>

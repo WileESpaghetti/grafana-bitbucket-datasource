@@ -35,5 +35,17 @@
   "dependencies": {
     "grafanaDependency": ">=7.0.0",
     "plugins": []
-  }
+  },
+  "routes": [
+    {
+      "path": "bitbucketws",
+      "url": "https://api.bitbucket.org/2.0",
+      "tokenAuth": {
+        "url": "https://{{ .SecureJsonData.clientId }}:{{ .SecureJsonData.clientSecret }}@bitbucket.org/site/oauth2/access_token",
+        "params": {
+          "grant_type": "client_credentials"
+        }
+      }
+    }
+  ]
 }
