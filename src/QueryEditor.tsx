@@ -11,38 +11,37 @@ const { FormField } = LegacyForms;
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
-  onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onRepositoryChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange, query } = this.props;
-    onChange({ ...query, queryText: event.target.value });
+    onChange({ ...query, repository: event.target.value });
   };
 
-  onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onOwnerChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, constant: parseFloat(event.target.value) });
+    onChange({ ...query, owner: event.target.value });
     // executes the query
     onRunQuery();
   };
 
   render() {
     const query = defaults(this.props.query, defaultQuery);
-    const { queryText, constant } = query;
+    const { repository, owner } = query;
 
     return (
       <div className="gf-form">
         <FormField
-          width={4}
-          value={constant}
-          onChange={this.onConstantChange}
-          label="Constant"
-          type="number"
-          step="0.1"
+          width={40}
+          value={owner || ''}
+          onChange={this.onOwnerChange}
+          label="Owner"
+          tooltip="The owner (organization or user) of the GitHub repository (example: 'grafana')"
         />
         <FormField
-          labelWidth={8}
-          value={queryText || ''}
-          onChange={this.onQueryTextChange}
-          label="Query Text"
-          tooltip="Not used yet"
+          labelWidth={40}
+          value={repository || ''}
+          onChange={this.onRepositoryChange}
+          label="Repository"
+          tooltip="The name of the Bitbucket repository"
         />
       </div>
     );

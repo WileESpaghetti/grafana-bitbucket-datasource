@@ -1,6 +1,12 @@
 import { DataQuery, DataSourceJsonData } from '@grafana/data';
 
-export interface MyQuery extends DataQuery {
+export interface RepositoryOptions {
+  repository?: string;
+  owner?: string;
+}
+
+// GitHubQuery
+export interface MyQuery extends DataQuery, RepositoryOptions {
   queryText?: string;
   constant: number;
 }
@@ -12,7 +18,8 @@ export const defaultQuery: Partial<MyQuery> = {
 /**
  * These are options configured for each DataSource instance
  */
-export interface MyDataSourceOptions extends DataSourceJsonData {
+// GithubDataSourceOptions
+export interface MyDataSourceOptions extends DataSourceJsonData, RepositoryOptions {
   path?: string;
 }
 
