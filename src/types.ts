@@ -19,6 +19,10 @@ export interface Indexable {
   [index: string]: any;
 }
 
+export interface CommitsOptions extends Indexable {
+  gitRef?: string;
+}
+
 export interface RepositoryOptions {
   repository?: string;
   owner?: string;
