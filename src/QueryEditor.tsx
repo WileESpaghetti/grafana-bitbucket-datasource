@@ -57,7 +57,7 @@ export const QueryEditor = (props: Props) => {
   );
 
   return (
-    <div className="gf-form">
+    <div>
       <BitbucketQuerySelector
         queryType={props.query.queryType}
         queryTypes={Object.keys(queryEditors)}
