@@ -22,7 +22,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   async doRequest(query: MyQuery) {
     const result = await getBackendSrv().datasourceRequest({
       method: 'GET',
-      url: this.url + '/bitbucketws/repositories/' + query.owner + '/' + query.repository + '/commits',
+      url: this.url + '/bitbucketws/repositories/' + query.owner + '/' + query.repository + '/' + query.queryType,
       // params: query,
     });
 

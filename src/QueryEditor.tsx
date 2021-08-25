@@ -1,49 +1,85 @@
-import defaults from 'lodash/defaults';
-
-import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms } from '@grafana/ui';
+import React, { ReactNode, useCallback } from 'react';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './datasource';
-import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
+import { MyDataSourceOptions, MyQuery, QueryType } from './types';
+import { BitbucketRepositoryQueryField } from './components/BitbucketRepositoryQueryField';
+import { BitbucketQuerySelector } from './components/BitbucketQuerySelector';
 
-const { FormField } = LegacyForms;
+const isValid = (value: any): boolean => {
+  // FIXME don't send if queryType is undefined
+  return true;
+};
 
-type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
+export const DefaultQueryType = QueryType.Commits;
 
-export class QueryEditor extends PureComponent<Props> {
-  onRepositoryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query } = this.props;
-    onChange({ ...query, repository: event.target.value });
-  };
+/* eslint-disable react/display-name */
+const queryEditors: {
+  [key: string]: { component: (props: Props, onChange: (val: any) => void) => ReactNode };
+} = {
+  [QueryType.Commits]: {
+    component: (props: Props, onChange: (val: any) => void) => (
+      <p>commit query</p>
+      // <QueryEditorCommits {...(props.query.options || {})} onChange={onChange} />
+    ),
+  },
+  [QueryType.Issues]: {
+    component: (props: Props, onChange: (val: any) => void) => (
+      <p>issues query</p>
+    ),
+  },
+};
 
-  onOwnerChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, owner: event.target.value });
-    // executes the query
-    onRunQuery();
-  };
-
-  render() {
-    const query = defaults(this.props.query, defaultQuery);
-    const { repository, owner } = query;
-
-    return (
-      <div className="gf-form">
-        <FormField
-          width={40}
-          value={owner || ''}
-          onChange={this.onOwnerChange}
-          label="Owner"
-          tooltip="The owner (organization or user) of the GitHub repository (example: 'grafana')"
-        />
-        <FormField
-          labelWidth={40}
-          value={repository || ''}
-          onChange={this.onRepositoryChange}
-          label="Repository"
-          tooltip="The name of the Bitbucket repository"
-        />
-      </div>
-    );
-  }
+interface Props extends QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions> {
+  queryTypes?: string[];
 }
+
+export const QueryEditor = (props: Props) => {
+  const queryEditor = queryEditors[props.query.queryType || DefaultQueryType];
+  const onChange = useCallback(
+    (value: MyQuery) => {
+      props.onChange(value);
+
+      if (isValid(value)) {
+        props.onRunQuery();
+      }
+    },
+    [props]
+  );
+
+  const onKeyChange = useCallback(
+    (key: string, value: any) => {
+      props.onChange({
+        ...props.query,
+        [key]: value,
+      });
+    },
+    [props.onChange, props.query]
+  );
+
+  return (
+    <div className="gf-form">
+      <BitbucketQuerySelector
+        queryType={props.query.queryType}
+        queryTypes={Object.keys(queryEditors)}
+        onChange={(val) => onKeyChange('queryType', val.value || DefaultQueryType)}
+      />
+
+      <BitbucketRepositoryQueryField
+        repository={props.query.repository}
+        owner={props.query.owner}
+        onChange={(repo) => {
+          onChange({
+            ...props.query,
+            ...repo,
+          });
+        }}
+      />
+
+      {queryEditor ? (
+        queryEditor.component(props, (value: any) => onKeyChange('options', !!value ? value : undefined))
+      ) : (
+        <span>Unsupported Query Type</span>
+      )}
+    </div>
+  );
+};

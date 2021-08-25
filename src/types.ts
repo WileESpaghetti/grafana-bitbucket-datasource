@@ -1,14 +1,33 @@
 import { DataQuery, DataSourceJsonData } from '@grafana/data';
 
+export enum QueryType {
+  Commits = 'Commits',
+  Issues = 'Issues',
+  Contributors = 'Contributors',
+  Tags = 'Tags',
+  Releases = 'Releases',
+  Pull_Requests = 'Pull Requests',
+  Labels = 'Labels',
+  Repositories = 'Repositories',
+  Organizations = 'Organizations',
+  GraphQL = 'GraphQL',
+  Milestones = 'Milestones',
+  Packages = 'Packages',
+}
+
+export interface Indexable {
+  [index: string]: any;
+}
+
 export interface RepositoryOptions {
   repository?: string;
   owner?: string;
 }
 
 // GitHubQuery
-export interface MyQuery extends DataQuery, RepositoryOptions {
+export interface MyQuery extends Indexable, DataQuery, RepositoryOptions {
   queryText?: string;
-  constant: number;
+  constant?: number;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
