@@ -14,7 +14,7 @@ export const BitbucketRepositoryQueryField = (props: Props) => {
     <InlineFieldRow>
       <InlineField
         label="Owner"
-        labelWidth={10}
+        labelWidth={20}
         tooltip="The owner (organization or user) of the Bitbucket repository (example: 'grafana')"
       >
         <Input
@@ -26,7 +26,7 @@ export const BitbucketRepositoryQueryField = (props: Props) => {
           onBlur={(el) => props.onChange({ ...props, owner: el.currentTarget.value })}
         />
       </InlineField>
-      <InlineField tooltip="The name of the Bitbucket repository" label="Repository" labelWidth={10}>
+      <InlineField tooltip="The name of the Bitbucket repository" label="Repository" labelWidth={20}>
         <Input
           // aria-label={selectors.components.QueryEditor.Repository.input}
           css=""

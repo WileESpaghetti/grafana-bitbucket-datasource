@@ -18,7 +18,7 @@ export const BitbucketQuerySelector = (props: Props) => {
 
   return (
     <InlineFieldRow>
-      <InlineField tooltip="What resource are you querying for?" label="Query Type" labelWidth={10}>
+      <InlineField tooltip="What resource are you querying for?" label="Query Type" labelWidth={20}>
         <Select width={36} options={queryTypeOptions} value={props.queryType} onChange={props.onChange} />
       </InlineField>
     </InlineFieldRow>
