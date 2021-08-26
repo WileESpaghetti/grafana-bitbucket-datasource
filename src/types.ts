@@ -29,7 +29,7 @@ export interface RepositoryOptions {
 }
 
 // GitHubQuery
-export interface MyQuery extends Indexable, DataQuery, RepositoryOptions {
+export interface MyQuery extends Indexable, DataQuery, RepositoryOptions, CommitsOptions {
   queryText?: string;
   constant?: number;
 }

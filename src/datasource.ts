@@ -20,9 +20,22 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
+    let url =
+      this.url +
+      '/bitbucketws/repositories/' +
+      query.owner +
+      '/' +
+      query.repository +
+      '/' +
+      (query.queryType || '').toLocaleLowerCase();
+
+    if (query?.options?.gitRef) {
+      url += '/' + query.options.gitRef;
+    }
+
     const result = await getBackendSrv().datasourceRequest({
       method: 'GET',
-      url: this.url + '/bitbucketws/repositories/' + query.owner + '/' + query.repository + '/' + query.queryType,
+      url: url,
       // params: query,
     });
 

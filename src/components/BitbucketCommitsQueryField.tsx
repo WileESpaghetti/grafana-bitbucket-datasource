@@ -12,10 +12,7 @@ export const BitbucketCommitsQueryField = (props: Props) => {
 
   return (
     <InlineFieldRow>
-      <InlineField
-        label="Ref (Branch / Tag)"
-        labelWidth={20}
-      >
+      <InlineField label="Ref (Branch / Tag)" labelWidth={20}>
         <Input
           // aria-label={selectors.components.QueryEditor.Ref.input}
           css=""

@@ -12,7 +12,7 @@ export const BitbucketQuerySelector = (props: Props) => {
   const queryTypeOptions: Array<SelectableValue<string>> = (props.queryTypes || []).map((key) => {
     return {
       label: key.replace(/_/gi, ' '),
-      value: key.toLocaleLowerCase(),
+      value: key,
     };
   });
 
