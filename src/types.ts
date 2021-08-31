@@ -23,6 +23,16 @@ export interface CommitsOptions extends Indexable {
   gitRef?: string;
 }
 
+export interface IssuesOptions extends Indexable {
+  timeField?: IssueTimeField;
+  query?: string;
+}
+
+export enum IssueTimeField {
+  CreatedAt,
+  ClosedAt,
+}
+
 export interface RepositoryOptions {
   repository?: string;
   owner?: string;
@@ -32,6 +42,7 @@ export interface RepositoryOptions {
 export interface MyQuery extends Indexable, DataQuery, RepositoryOptions, CommitsOptions {
   queryText?: string;
   constant?: number;
+  options?: CommitsOptions | IssuesOptions;
 }
 
 export const defaultQuery: Partial<MyQuery> = {

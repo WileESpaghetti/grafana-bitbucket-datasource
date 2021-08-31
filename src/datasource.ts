@@ -8,7 +8,7 @@ import {
   FieldType,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions } from './types';
+import { MyQuery, MyDataSourceOptions, QueryType } from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   url?: string;
@@ -45,52 +45,64 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
     const promises = options.targets.map((query) =>
       this.doRequest(query).then((response) => {
-        /*
-          // Frames converts the list of commits to a Grafana DataFrame
-        func (c Commits) Frames() data.Frames {
-            frame := data.NewFrame(
-                "commits",
-                data.NewField("id", nil, []string{}),
-                data.NewField("author", nil, []string{}),
-                data.NewField("author_login", nil, []string{}),
-                data.NewField("author_email", nil, []string{}),
-                data.NewField("author_company", nil, []string{}),
-                data.NewField("commited_at", nil, []time.Time{}),
-                data.NewField("pushed_at", nil, []time.Time{}),
-            )
+        let frame: MutableDataFrame;
 
-            for _, v := range c {
-                frame.AppendRow(
-                    v.OID,
-                    v.Author.Name,
-                    v.Author.User.Login,
-                    v.Author.Email,
-                    v.Author.User.Company,
-                    v.CommittedDate.Time,
-                    v.PushedDate.Time,
-                )
-            }
-
-            return data.Frames{frame}
+        switch (query.queryType) {
+          case QueryType.Commits:
+            console.log('query type commits');
+            frame = new MutableDataFrame({
+              refId: query.refId,
+              name: 'commits',
+              fields: [
+                { name: 'id', type: FieldType.string },
+                { name: 'author', type: FieldType.string },
+                { name: 'author_login', type: FieldType.string },
+                { name: 'author_email', type: FieldType.string },
+                { name: 'author_company', type: FieldType.string },
+                { name: 'commited_at', type: FieldType.time },
+                { name: 'pushed_at', type: FieldType.time },
+              ],
+            });
+            response.data.values.forEach((point: any) => {
+              frame.appendRow([point.hash, point.author.raw, '', '', '', point.date, point.date]);
+            });
+            break;
+          case QueryType.Issues:
+            console.log('query type issues');
+            console.log(response);
+            frame = new MutableDataFrame({
+              refId: query.refId,
+              name: 'issues',
+              fields: [
+                { name: 'title', type: FieldType.string },
+                { name: 'author', type: FieldType.string },
+                { name: 'author_company', type: FieldType.string },
+                { name: 'repo', type: FieldType.string },
+                { name: 'number', type: FieldType.number },
+                { name: 'closed', type: FieldType.boolean },
+                { name: 'created_at', type: FieldType.time },
+                { name: 'closed_at', type: FieldType.time },
+              ],
+            });
+            response.data.values.forEach((point: any) => {
+              // TODO api does not include a closed_at equivalent
+              const closed = ['new', 'open'].indexOf(point.state) === -1;
+              frame.appendRow([
+                point.title,
+                point.reporter.display_name,
+                '',
+                point.repository.full_name,
+                point.id,
+                closed,
+                point.created_on,
+                '',
+              ]);
+            });
+            break;
+          default:
+            // TODO return error unknown query type
+            frame = new MutableDataFrame();
         }
-           */
-        const frame = new MutableDataFrame({
-          refId: query.refId,
-          name: 'commits',
-          fields: [
-            { name: 'id', type: FieldType.string },
-            { name: 'author', type: FieldType.string },
-            { name: 'author_login', type: FieldType.string },
-            { name: 'author_email', type: FieldType.string },
-            { name: 'author_company', type: FieldType.string },
-            { name: 'commited_at', type: FieldType.time },
-            { name: 'pushed_at', type: FieldType.time },
-          ],
-        });
-
-        response.data.values.forEach((point: any) => {
-          frame.appendRow([point.hash, point.author.raw, '', '', '', point.date, point.date]);
-        });
 
         return frame;
       })

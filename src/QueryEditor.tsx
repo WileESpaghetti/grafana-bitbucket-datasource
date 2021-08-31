@@ -5,6 +5,7 @@ import { MyDataSourceOptions, MyQuery, QueryType } from './types';
 import { BitbucketRepositoryQueryField } from './components/BitbucketRepositoryQueryField';
 import { BitbucketQuerySelector } from './components/BitbucketQuerySelector';
 import { BitbucketCommitsQueryField } from './components/BitbucketCommitsQueryField';
+import { BitbucketIssuesQueryField } from './components/BitbucketIssuesQueryField';
 
 const isValid = (value: any): boolean => {
   // FIXME don't send if queryType is undefined
@@ -23,7 +24,9 @@ const queryEditors: {
     ),
   },
   [QueryType.Issues]: {
-    component: (props: Props, onChange: (val: any) => void) => <p>issues query</p>,
+    component: (props: Props, onChange: (val: any) => void) => (
+      <BitbucketIssuesQueryField {...(props.query.options || {})} onChange={onChange} />
+    ),
   },
 };
 

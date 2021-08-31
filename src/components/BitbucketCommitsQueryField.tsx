@@ -3,7 +3,6 @@ import { InlineField, InlineFieldRow, Input } from '@grafana/ui';
 import { CommitsOptions } from '../types';
 
 interface Props extends CommitsOptions {
-  gitRef: string;
   onChange: (value: CommitsOptions) => void;
 }
 
