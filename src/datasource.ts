@@ -20,17 +20,18 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async doRequest(query: MyQuery) {
-    let url =
-      this.url +
-      '/bitbucketws/repositories/' +
-      query.owner +
-      '/' +
-      query.repository +
-      '/' +
-      (query.queryType || '').toLocaleLowerCase();
-
-    if (query?.options?.gitRef) {
-      url += '/' + query.options.gitRef;
+    let url = this.url || '';
+    switch (query.queryType) {
+      default:
+        url += `/bitbucketws/repositories/${query.owner}/${query.repository}/${(
+          query.queryType || ''
+        ).toLocaleLowerCase()}`;
+      case query?.options?.gitRef:
+        url += `/${query?.options?.gitRef}`;
+        break;
+      case QueryType.Tags:
+        url += `/bitbucketws/repositories/${query.owner}/${query.repository}/refs/tags`;
+        break;
     }
 
     const result = await getBackendSrv().datasourceRequest({
@@ -96,6 +97,40 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
                 closed,
                 point.created_on,
                 '',
+              ]);
+            });
+            break;
+          case QueryType.Tags:
+            console.log('query type tags');
+            console.log(response);
+            // FIXME need the exact contexts for date fields. which are for the "tag" and which are for the tag target commit
+            frame = new MutableDataFrame({
+              refId: query.refId,
+              name: 'tags',
+              fields: [
+                { name: 'name', type: FieldType.string },
+                { name: 'id', type: FieldType.string },
+                { name: 'author', type: FieldType.string },
+                { name: 'author_login', type: FieldType.string },
+                { name: 'author_email', type: FieldType.string },
+                { name: 'author_company', type: FieldType.string },
+                { name: 'pushed_at', type: FieldType.time },
+                { name: 'committed_at', type: FieldType.time },
+                { name: 'commit_pushed_at', type: FieldType.time },
+              ],
+            });
+            response.data.values.forEach((point: any) => {
+              // TODO api does not include a closed_at equivalent
+              frame.appendRow([
+                point.name,
+                point.target.hash,
+                point.target.author.raw,
+                '',
+                '',
+                '',
+                null, // FIXME need pushed_at
+                null, // FIXME need committed_at
+                point.target.date,
               ]);
             });
             break;

@@ -38,11 +38,13 @@ export interface RepositoryOptions {
   owner?: string;
 }
 
+export interface TagsOptions extends Indexable {}
+
 // GitHubQuery
 export interface MyQuery extends Indexable, DataQuery, RepositoryOptions, CommitsOptions {
   queryText?: string;
   constant?: number;
-  options?: CommitsOptions | IssuesOptions;
+  options?: CommitsOptions | IssuesOptions | TagsOptions;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
