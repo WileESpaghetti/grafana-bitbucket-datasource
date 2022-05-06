@@ -8,6 +8,7 @@ import { BitbucketCommitsQueryField } from './components/BitbucketCommitsQueryFi
 import { BitbucketIssuesQueryField } from './components/BitbucketIssuesQueryField';
 import { BitbucketTagsQueryField } from './components/BitbucketTagsQueryField';
 import {BitbucketPullRequestsQueryField} from "./components/BitbucketPullRequestsQueryField";
+import {BitbucketMilestonesQueryField} from "./components/BitbucketMilestonesQueryField";
 
 const isValid = (value: any): boolean => {
   // FIXME don't send if queryType is undefined
@@ -38,6 +39,11 @@ const queryEditors: {
        <BitbucketPullRequestsQueryField {...(props.query.options || {})} onChange={onChange}/>
     ),
   },
+    [QueryType.Milestones]: {
+        component: (props: Props, onChange: (val: any) => void) => (
+            <BitbucketMilestonesQueryField {...(props.query.options || {})} onChange={onChange} />
+        ),
+    },
 };
 
 interface Props extends QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions> {

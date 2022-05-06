@@ -35,6 +35,9 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       case QueryType.Pull_Requests:
         url += `/bitbucketws/repositories/${query.owner}/${query.repository}/pullrequests`;
         break;
+      case QueryType.Milestones:
+        url += `/bitbucketws/repositories/${query.owner}/${query.repository}/milestones`;
+        break;
     }
 
     const result = await getBackendSrv().datasourceRequest({
@@ -171,6 +174,26 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
                 '',
                 point.created_on,
                 point.updated_on,
+              ]);
+            });
+            break;
+          case QueryType.Milestones:
+            console.log('query type milestones');
+            console.log(response);
+            frame = new MutableDataFrame({
+              refId: query.refId,
+              name: 'milestones',
+              fields: [
+                //{ name: 'id', type: FieldType.number }, // api docs say this should be a part of the milestone object, but it isn't returned in my testing
+                { name: 'title', type: FieldType.string },
+                { name: 'type', type: FieldType.string }, // not in docs, but returned
+              ],
+            });
+            response.data.values.forEach((point: any) => {
+              frame.appendRow([
+                // point.id, // api docs say this should be a part of the milestone object, but it isn't returned in my testing
+                point.name,
+                point.type, // not in docs, but returned
               ]);
             });
             break;

@@ -22,6 +22,11 @@ export enum PullRequestTimeField {
   None,
 }
 
+export interface MilestonesOptions extends Indexable {
+  query?: string;
+}
+
+
 export interface Indexable {
   [index: string]: any;
 }
