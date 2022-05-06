@@ -1,14 +1,14 @@
-import { getBackendSrv } from '@grafana/runtime';
+import {getBackendSrv} from '@grafana/runtime';
 import {
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
-  MutableDataFrame,
   FieldType,
+  MutableDataFrame,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, QueryType } from './types';
+import {MyDataSourceOptions, MyQuery, QueryType} from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   url?: string;
@@ -31,6 +31,9 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         break;
       case QueryType.Tags:
         url += `/bitbucketws/repositories/${query.owner}/${query.repository}/refs/tags`;
+        break;
+      case QueryType.Pull_Requests:
+        url += `/bitbucketws/repositories/${query.owner}/${query.repository}/pullrequests`;
         break;
     }
 
@@ -131,6 +134,43 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
                 null, // FIXME need pushed_at
                 null, // FIXME need committed_at
                 point.target.date,
+              ]);
+            });
+            break;
+          case QueryType.Pull_Requests:
+            console.log('query type pull request');
+            console.log(response);
+            frame = new MutableDataFrame({
+              refId: query.refId,
+              name: 'pull_requests',
+              fields: [
+                  // links: object
+                { name: 'id', type: FieldType.number },
+                { name: 'title', type: FieldType.string },
+                  // rendered: Rendered Pull Request Markup
+                  // summary: object
+                { name: 'state', type: FieldType.string },
+                { name: 'author', type: FieldType.string },
+                { name: 'author_login', type: FieldType.string },
+                { name: 'author_email', type: FieldType.string },
+                { name: 'author_company', type: FieldType.string },
+                // { name: 'closed_at', type: FieldType.time },
+                { name: 'created_at', type: FieldType.time },
+                { name: 'updated_at', type: FieldType.time },
+                // { name: 'merged_at', type: FieldType.time },
+              ],
+            });
+            response.data.values.forEach((point: any) => {
+              // TODO api does not include a closed_at equivalent
+              frame.appendRow([
+                point.id,
+                point.title,
+                point.state,
+                point.author.display_name,
+                point.author.nickname,
+                '',
+                point.created_on,
+                point.updated_on,
               ]);
             });
             break;

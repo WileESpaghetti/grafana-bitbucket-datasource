@@ -5,7 +5,7 @@ export enum QueryType {
   Issues = 'Issues',
   Contributors = 'Contributors',
   Tags = 'Tags',
-  Releases = 'Releases',
+  // Releases = 'Releases', // Not Supported By Bitbucket API
   Pull_Requests = 'Pull Requests',
   Labels = 'Labels',
   Repositories = 'Repositories',
@@ -13,6 +13,13 @@ export enum QueryType {
   GraphQL = 'GraphQL',
   Milestones = 'Milestones',
   Packages = 'Packages',
+}
+
+export enum PullRequestTimeField {
+  ClosedAt,
+  CreatedAt,
+  MergedAt,
+  None,
 }
 
 export interface Indexable {
@@ -39,6 +46,11 @@ export interface RepositoryOptions {
 }
 
 export interface TagsOptions extends Indexable {}
+
+export interface PullRequestsOptions extends Indexable {
+  timeField?: PullRequestTimeField;
+  query?: string;
+}
 
 // GitHubQuery
 export interface MyQuery extends Indexable, DataQuery, RepositoryOptions, CommitsOptions {

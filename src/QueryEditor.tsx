@@ -7,6 +7,7 @@ import { BitbucketQuerySelector } from './components/BitbucketQuerySelector';
 import { BitbucketCommitsQueryField } from './components/BitbucketCommitsQueryField';
 import { BitbucketIssuesQueryField } from './components/BitbucketIssuesQueryField';
 import { BitbucketTagsQueryField } from './components/BitbucketTagsQueryField';
+import {BitbucketPullRequestsQueryField} from "./components/BitbucketPullRequestsQueryField";
 
 const isValid = (value: any): boolean => {
   // FIXME don't send if queryType is undefined
@@ -31,6 +32,11 @@ const queryEditors: {
   },
   [QueryType.Tags]: {
     component: (props: Props, _: (val: any) => void) => <BitbucketTagsQueryField {...(props.query.options || {})} />,
+  },
+  [QueryType.Pull_Requests]: {
+    component: (props: Props, onChange: (val: any) => void) => (
+       <BitbucketPullRequestsQueryField {...(props.query.options || {})} onChange={onChange}/>
+    ),
   },
 };
 
