@@ -61,17 +61,23 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
               refId: query.refId,
               name: 'commits',
               fields: [
-                { name: 'id', type: FieldType.string },
+                { name: 'hash', type: FieldType.string },
+                { name: 'message', type: FieldType.string },
+                { name: 'date', type: FieldType.time },
                 { name: 'author', type: FieldType.string },
-                { name: 'author_login', type: FieldType.string },
-                { name: 'author_email', type: FieldType.string },
-                { name: 'author_company', type: FieldType.string },
-                { name: 'commited_at', type: FieldType.time },
-                { name: 'pushed_at', type: FieldType.time },
+                { name: 'author_display_name', type: FieldType.string },
+                { name: 'author_nickname', type: FieldType.string },
               ],
             });
             response.data.values.forEach((point: any) => {
-              frame.appendRow([point.hash, point.author.raw, '', '', '', point.date, point.date]);
+              frame.appendRow([
+                point.hash,
+                point.message,
+                point.date,
+                point.author.raw,
+                point.author.user ? point.author.user.display_name : '',
+                point.author.user ? point.author.user.nickname : '',
+              ]);
             });
             break;
           case QueryType.Issues:

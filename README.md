@@ -40,3 +40,31 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
 - [Grafana documentation](https://grafana.com/docs/)
 - [Grafana Tutorials](https://grafana.com/tutorials/) - Grafana Tutorials are step-by-step guides that help you make the most of Grafana
 - [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana Design System
+
+## Bitbucket API 2.0 Support
+https://developer.atlassian.com/cloud/bitbucket/rest/intro/
+
+| Resource            | Supported |
+|---------------------|-----------|
+| Addon               |           |
+| Branch restrictions |           |
+| Branching model     |           |
+| Commit statuses     |           |
+| Commits             | - [x]     |
+| Deployments         |           |
+| Downloads           |           |
+| Issue Tracker       |           |
+| Pipelines           |           |
+| Projects            |           |
+| Pullrequests        |           |
+| Refs                |           |
+| Reports             |           |
+| Repositories        |           |
+| Snippets            |           |
+| Source              |           |
+| Ssh                 |           |
+| Teams               |           |
+| Users               |           |
+| Webhooks            |           |
+| Workspaces          |           |
+| Other operations    |           |
