@@ -230,10 +230,11 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
   async testDatasource() {
     // TODO return error until client ID and client secret and both configured then run api request
-    const result = await getBackendSrv().datasourceRequest({
-      method: 'GET',
-      url: this.url + '/bitbucketws/user',
-    });
+    const result = getBackendSrv()
+        .fetch({
+          method: 'GET',
+          url: this.url + '/bitbucketws/user',
+        }).toPromise();
 
     return result;
     // Implement a health check for your data source.

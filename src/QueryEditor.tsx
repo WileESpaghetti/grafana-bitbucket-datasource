@@ -10,6 +10,9 @@ import { BitbucketTagsQueryField } from './components/BitbucketTagsQueryField';
 import {BitbucketPullRequestsQueryField} from "./components/BitbucketPullRequestsQueryField";
 import {BitbucketMilestonesQueryField} from "./components/BitbucketMilestonesQueryField";
 
+export const LeftColumnWidth = 20;
+export const RightColumnWidth = 36;
+
 const isValid = (value: any): boolean => {
   // FIXME don't send if queryType is undefined
   return true;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InlineField, InlineFieldRow, Input } from '@grafana/ui';
 import { RepositoryOptions } from '../types';
+import {RightColumnWidth} from "../QueryEditor";
 
 interface Props extends RepositoryOptions {
   onChange: (value: RepositoryOptions) => void;
@@ -20,7 +21,7 @@ export const BitbucketRepositoryQueryField = (props: Props) => {
         <Input
           // aria-label={selectors.components.QueryEditor.Owner.input}
           css=""
-          width={36}
+          width={RightColumnWidth}
           value={owner}
           onChange={(el) => setOwner(el.currentTarget.value)}
           onBlur={(el) => props.onChange({ ...props, owner: el.currentTarget.value })}
@@ -30,7 +31,7 @@ export const BitbucketRepositoryQueryField = (props: Props) => {
         <Input
           // aria-label={selectors.components.QueryEditor.Repository.input}
           css=""
-          width={36}
+          width={RightColumnWidth}
           value={repository}
           onChange={(el) => setRepository(el.currentTarget.value)}
           onBlur={(el) => props.onChange({ ...props, repository: el.currentTarget.value })}
